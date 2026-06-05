@@ -1,6 +1,5 @@
 package com.TfPSR.CucoProject;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,7 +18,7 @@ public class GameScreen extends ScreenAdapter {
     private final Batch batch;
 
     private final World world;
-    private final Box2DDebugRenderer B2dr;
+    private final Box2DDebugRenderer debugRenderer;
     private final Body playerBody;
     private final Body groundBody;
 
@@ -28,11 +27,46 @@ public class GameScreen extends ScreenAdapter {
         this.viewport = game.getViewport();
         this.camera = game.getCamera();
         this.batch = game.getBatch();
-        this.B2dr = new Box2DDebugRenderer();
+        this.debugRenderer = new Box2DDebugRenderer();
 
         world = new World(GRAVEDAD, true);
-        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(4f, 1f), BodyDef.BodyType.StaticBody, world, 0.4f);
-        playerBody = ShapeFactory.createRectangle(new Vector2(2.5f, 5f), new Vector2(1f, 1f), BodyDef.BodyType.DynamicBody, world, 0.4f);
+        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 0f, 0);
+        playerBody = ShapeFactory.createRectangle(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
+    }
+
+    public Vector2 findMousePosition() {
+        Vector2 mousePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+
+        viewport.unproject(mousePosition);
+
+        return mousePosition;
+    }
+
+    public void movePlayerToMouse(Vector2 mousePosition) {
+        float distanceX = mousePosition.x - playerBody.getPosition().x;
+
+        float velocityX = playerBody.getLinearVelocity().x;
+
+        float forceX = distanceX * 20f - velocityX * 10f;
+
+        playerBody.applyForceToCenter(
+            forceX,
+            0,
+            true
+        );
+
+        float distanceY = mousePosition.y - playerBody.getPosition().y;
+
+        float velocityY = playerBody.getLinearVelocity().y;
+
+        float forceY = distanceY * 20f - velocityY * 10f;
+
+        playerBody.applyForceToCenter(
+            0,
+            forceY,
+            true
+        );
+
     }
 
     @Override
@@ -46,13 +80,15 @@ public class GameScreen extends ScreenAdapter {
 
     private void draw() {
         batch.setProjectionMatrix(camera.combined);
-        B2dr.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
     }
 
     private void update(float delta) {
-        camera.position.set(playerBody.getPosition(), 0);
-        camera.zoom = 1f;
+        camera.position.set(0, 2, 0);
+        camera.zoom = 3f;
         camera.update();
+
+        movePlayerToMouse(findMousePosition());
 
         world.step(delta, 6, 2);
     }
