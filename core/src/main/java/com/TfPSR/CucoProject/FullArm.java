@@ -6,27 +6,27 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
-public class Player {
+public class FullArm {
     private final Body hand;
-    private final Body arm1;
-    private final Body arm2;
+    private final Body forearm;
+    private final Body arm;
 
-    public Player(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float density, float friction, float restitution) {
+    public FullArm(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float density, float friction, float restitution) {
         hand = ShapeFactory.createRectangle(position, size, angle, type, world, density, friction, restitution);
-        arm1 = ShapeFactory.createRectangle(position, new Vector2(0.5f, 2f), angle, type, world, density, friction, restitution);
-        arm2 = ShapeFactory.createRectangle(position, new Vector2(0.5f, 2f), angle, type, world, density, friction, restitution);
+        forearm = ShapeFactory.createRectangle(position, new Vector2(0.5f, 2f), angle, type, world, density, friction, restitution);
+        arm = ShapeFactory.createRectangle(position, new Vector2(0.5f, 2f), angle, type, world, density, friction, restitution);
 
         RevoluteJointDef revoluteJointDef1 = new RevoluteJointDef();
         revoluteJointDef1.bodyA = hand;
-        revoluteJointDef1.bodyB = arm1;
+        revoluteJointDef1.bodyB = forearm;
         revoluteJointDef1.collideConnected = true;
         revoluteJointDef1.localAnchorA.set(new Vector2(0, size.y/1.5f));
         revoluteJointDef1.localAnchorB.set(new Vector2(0, size.y));
         world.createJoint(revoluteJointDef1);
 
         RevoluteJointDef revoluteJointDef2 = new RevoluteJointDef();
-        revoluteJointDef2.bodyA = arm1;
-        revoluteJointDef2.bodyB = arm2;
+        revoluteJointDef2.bodyA = forearm;
+        revoluteJointDef2.bodyB = arm;
         revoluteJointDef2.collideConnected = true;
         revoluteJointDef2.localAnchorA.set(new Vector2(0, size.y*-1.3f));
         revoluteJointDef2.localAnchorB.set(new Vector2(0, size.y));
@@ -58,11 +58,13 @@ public class Player {
             forceY,
             true
         );
-
     }
 
     public void update(Vector2 mousePosition) {
         movePlayerToMouse(mousePosition);
+    }
 
+    public Body getArm() {
+        return arm;
     }
 }

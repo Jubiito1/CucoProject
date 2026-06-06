@@ -21,8 +21,7 @@ public class GameScreen extends ScreenAdapter {
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
     private final Body groundBody;
-    private final Player player1;
-    private final Player player2;
+    private final Character player;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -32,9 +31,8 @@ public class GameScreen extends ScreenAdapter {
         this.debugRenderer = new Box2DDebugRenderer();
 
         world = new World(GRAVEDAD, true);
-        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 0f, 0);
-        player1 = new Player(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
-        player2 = new Player(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
+        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0);
+        player = new Character(new Vector2(3f, 2f), world);
     }
 
     public Vector2 findMousePosition() {
@@ -66,13 +64,9 @@ public class GameScreen extends ScreenAdapter {
         camera.zoom = 3f;
         camera.update();
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            player1.update(findMousePosition());
-        }
+        player.update(findMousePosition());
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            player2.update(findMousePosition());
-        }
+
 
         world.step(delta, 6, 2);
     }
