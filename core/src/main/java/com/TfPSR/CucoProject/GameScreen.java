@@ -1,6 +1,7 @@
 package com.TfPSR.CucoProject;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,8 +20,9 @@ public class GameScreen extends ScreenAdapter {
 
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
-    private final Body playerBody;
     private final Body groundBody;
+    private final Player player1;
+    private final Player player2;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -31,7 +33,8 @@ public class GameScreen extends ScreenAdapter {
 
         world = new World(GRAVEDAD, true);
         groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 0f, 0);
-        playerBody = ShapeFactory.createRectangle(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
+        player1 = new Player(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
+        player2 = new Player(new Vector2(0f, 5f), new Vector2(1f, 1f), 0, BodyDef.BodyType.DynamicBody, world, 0.4f, 0f, 0);
     }
 
     public Vector2 findMousePosition() {
@@ -42,32 +45,7 @@ public class GameScreen extends ScreenAdapter {
         return mousePosition;
     }
 
-    public void movePlayerToMouse(Vector2 mousePosition) {
-        float distanceX = mousePosition.x - playerBody.getPosition().x;
 
-        float velocityX = playerBody.getLinearVelocity().x;
-
-        float forceX = distanceX * 20f - velocityX * 10f;
-
-        playerBody.applyForceToCenter(
-            forceX,
-            0,
-            true
-        );
-
-        float distanceY = mousePosition.y - playerBody.getPosition().y;
-
-        float velocityY = playerBody.getLinearVelocity().y;
-
-        float forceY = distanceY * 20f - velocityY * 10f;
-
-        playerBody.applyForceToCenter(
-            0,
-            forceY,
-            true
-        );
-
-    }
 
     @Override
     public void render(float delta) {
@@ -88,7 +66,13 @@ public class GameScreen extends ScreenAdapter {
         camera.zoom = 3f;
         camera.update();
 
-        movePlayerToMouse(findMousePosition());
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            player1.update(findMousePosition());
+        }
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            player2.update(findMousePosition());
+        }
 
         world.step(delta, 6, 2);
     }
