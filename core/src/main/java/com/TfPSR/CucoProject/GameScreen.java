@@ -31,7 +31,7 @@ public class GameScreen extends ScreenAdapter {
         this.debugRenderer = new Box2DDebugRenderer();
 
         world = new World(GRAVEDAD, true);
-        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0);
+        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, (short) 0);
         player = new Character( new Vector2(2f, 2f), new Vector2(0.6f, 1.80f), world);
     }
 
@@ -66,6 +66,6 @@ public class GameScreen extends ScreenAdapter {
 
         player.update(findMousePosition());
 
-        //world.step(delta, 6, 2);
+        world.step(delta, 10, 4);
     }
 }
