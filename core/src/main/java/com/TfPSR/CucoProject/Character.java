@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 public class Character {
     private static final float HEAD_WIDTH_RATIO = 0.28f;
@@ -66,7 +65,6 @@ public class Character {
         RevoluteJoint rightShoulderJoint = JointFactory.createRevoluteJoint(torso, rightArm.getArm(), false, rightShoulderAnchor, rightArm.getShoulderAnchor(), world, 0f, 180f);
         RevoluteJoint leftLegJoint = JointFactory.createRevoluteJoint(torso, leftLeg, false, leftTorsoHipAnchor, leftLegHipAnchor, world, -90, 90);
         RevoluteJoint rightLegJoint = JointFactory.createRevoluteJoint(torso, rightLeg, false, rightTorsoHipAnchor, rightLegHipAnchor, world, -90, 90);
-
     }
 
     public void update(Vector2 mousePosition) {

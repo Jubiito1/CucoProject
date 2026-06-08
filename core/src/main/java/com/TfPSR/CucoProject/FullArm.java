@@ -8,6 +8,10 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 public class FullArm {
+    private static final float ARM_HEIGHT_RATIO = 0.47f;
+    private static final float FOREARM_HEIGHT_RATIO = 0.4f;
+    private static final float HAND_HEIGHT_RATIO = 0.13f;
+
     private final Body hand;
     private final Body forearm;
     private final Body arm;
@@ -15,9 +19,9 @@ public class FullArm {
 
     public FullArm(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float density, float friction, float restitution, short groupIndex, Sides side) {
 
-        Vector2 armSize = new Vector2(size.x, size.y * 0.47f);
-        Vector2 forearmSize = new Vector2(size.x, size.y * 0.4f);
-        Vector2 handSize = new Vector2(size.x, size.y * 0.13f);
+        Vector2 armSize = new Vector2(size.x, size.y * ARM_HEIGHT_RATIO);
+        Vector2 forearmSize = new Vector2(size.x, size.y * FOREARM_HEIGHT_RATIO);
+        Vector2 handSize = new Vector2(size.x, size.y * HAND_HEIGHT_RATIO);
 
         Vector2 armPosition = new Vector2(position.x, position.y + (size.y / 2) - (armSize.y / 2));
         Vector2 forearmPosition = new Vector2(position.x, position.y - (size.y / 2) + handSize.y + (forearmSize.y / 2));
@@ -45,8 +49,6 @@ public class FullArm {
 
 
     }
-
-
 
     public void movePlayerToMouse(Vector2 mousePosition) {
         float distanceX = mousePosition.x - hand.getPosition().x;

@@ -61,7 +61,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void update(float delta) {
         camera.position.set(0, 2, 0);
-        camera.zoom = 0.5f;
+        camera.zoom = 0.7f;
         camera.update();
 
         player.update(findMousePosition());
