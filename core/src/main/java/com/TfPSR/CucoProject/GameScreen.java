@@ -32,7 +32,7 @@ public class GameScreen extends ScreenAdapter {
 
         world = new World(GRAVEDAD, true);
         groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, (short) 0);
-        player = new Character( new Vector2(2f, 2f), new Vector2(0.6f, 1.80f), world);
+        player = new Character( new Vector2(2f, 4f), new Vector2(0.6f, 1.80f), 80f, world);
     }
 
     public Vector2 findMousePosition() {

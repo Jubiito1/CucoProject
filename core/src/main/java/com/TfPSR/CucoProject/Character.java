@@ -21,16 +21,22 @@ public class Character {
     private static final float LEGS_WIDTH_RATIO = 0.25f;
     private static final float LEGS_HEIGHT_RATIO = 0.5f;
 
+    private static final float HEAD_MASS_RATIO = 0.08f;
+    private static final float TORSO_MASS_RATIO = 0.50f;
+
+    private static final float ARM_MASS_RATIO = 0.03f;
+
+    private static final float LEG_MASS_RATIO = 0.15f;
+
     private final Body head;
     private final Body torso;
     private final FullArm leftArm;
     private final FullArm rightArm;
     private final Body leftLeg;
     private final Body rightLeg;
-
     private final short groupIndex = -1;
 
-    public Character(Vector2 position, Vector2 size, World world) {
+    public Character(Vector2 position, Vector2 size, float weight, World world) {
 
         Vector2 headSize = new Vector2(size.x * HEAD_WIDTH_RATIO, size.y * HEAD_HEIGHT_RATIO);
         Vector2 torsoSize = new Vector2(size.x * CHEST_WIDTH_RATIO, size.y * CHEST_HEIGHT_RATIO);
@@ -44,12 +50,27 @@ public class Character {
         Vector2 leftLegPosition = new Vector2(position.x - (torsoSize.x / 2) + (legsSize.x / 2), position.y - (size.y / 2) + (legsSize.y / 2));
         Vector2 rightLegPosition = new Vector2(position.x + (torsoSize.x / 2) - (legsSize.x / 2), position.y - (size.y / 2) + (legsSize.y / 2));
 
-        this.head = ShapeFactory.createRectangle(headPosition, headSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex);
-        this.torso = ShapeFactory.createRectangle(torsoPosition, torsoSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex);
-        this.leftArm = new FullArm(leftArmPosition, armsSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex, Sides.LEFT);
-        this.rightArm = new FullArm(rightArmPosition, armsSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex, Sides.RIGHT);
-        this.leftLeg = ShapeFactory.createRectangle(leftLegPosition, legsSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex);
-        this.rightLeg = ShapeFactory.createRectangle(rightLegPosition, legsSize, 0, BodyDef.BodyType.DynamicBody, world, 1f, 0f, 0, groupIndex);
+        float headMass = weight * HEAD_MASS_RATIO;
+        float torsoMass = weight * TORSO_MASS_RATIO;
+        float armsMass = weight * ARM_MASS_RATIO;
+        float legMass = weight * LEG_MASS_RATIO;
+
+        float headArea = headSize.x * headSize.y;
+        float torsoArea = torsoSize.x * torsoSize.y;
+        float armArea = armsSize.x * armsSize.y;
+        float legArea = legsSize.x * legsSize.y;
+
+        float headDensity = headMass / headArea;
+        float torsoDensity = torsoMass / torsoArea;
+        float armsDensity = armsMass / armArea;
+        float legsDensity = legMass / legArea;
+
+        this.head = ShapeFactory.createRectangle(headPosition, headSize, 0, BodyDef.BodyType.DynamicBody, world, headDensity, 0f, 0, groupIndex);
+        this.torso = ShapeFactory.createRectangle(torsoPosition, torsoSize, 0, BodyDef.BodyType.DynamicBody, world, torsoDensity, 0f, 0, groupIndex);
+        this.leftArm = new FullArm(leftArmPosition, armsSize, 0, BodyDef.BodyType.DynamicBody, world, armsDensity, 0f, 0, groupIndex, Sides.LEFT);
+        this.rightArm = new FullArm(rightArmPosition, armsSize, 0, BodyDef.BodyType.DynamicBody, world, armsDensity, 0f, 0, groupIndex, Sides.RIGHT);
+        this.leftLeg = ShapeFactory.createRectangle(leftLegPosition, legsSize, 0, BodyDef.BodyType.DynamicBody, world, legsDensity, 0f, 0, groupIndex);
+        this.rightLeg = ShapeFactory.createRectangle(rightLegPosition, legsSize, 0, BodyDef.BodyType.DynamicBody, world, legsDensity, 0f, 0, groupIndex);
 
         Vector2 torsoNeckAnchor = new Vector2(0, (torsoSize.y / 2));
         Vector2 headNeckAnchor = new Vector2(0, - (headSize.y / 2));
