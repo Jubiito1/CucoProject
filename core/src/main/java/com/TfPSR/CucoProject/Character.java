@@ -28,12 +28,18 @@ public class Character {
 
     private static final float LEG_MASS_RATIO = 0.15f;
 
+    private final World world;
+
     private final Body head;
     private final Body torso;
     private final FullArm leftArm;
     private final FullArm rightArm;
     private final Body leftLeg;
     private final Body rightLeg;
+
+    private boolean leftHandFollowingMouse;
+    private boolean rightHandFollowingMouse;
+
     private final short groupIndex = -1;
 
     public Character(Vector2 position, Vector2 size, float weight, World world) {
@@ -65,6 +71,8 @@ public class Character {
         float armsDensity = armsMass / armArea;
         float legsDensity = legMass / legArea;
 
+        this.world = world;
+
         this.head = ShapeFactory.createRectangle(headPosition, headSize, 0, BodyDef.BodyType.DynamicBody, world, headDensity, 0f, 0, false, groupIndex);
         this.torso = ShapeFactory.createRectangle(torsoPosition, torsoSize, 0, BodyDef.BodyType.DynamicBody, world, torsoDensity, 0f, 0, false, groupIndex);
         this.leftArm = new FullArm(leftArmPosition, armsSize, 0, BodyDef.BodyType.DynamicBody, world, armsDensity, 0f, 0, groupIndex, Sides.LEFT);
@@ -88,29 +96,50 @@ public class Character {
         RevoluteJoint rightLegJoint = JointFactory.createRevoluteJoint(torso, rightLeg, false, rightTorsoHipAnchor, rightLegHipAnchor, world, -90, 90);
     }
 
+    public void onLeftClickPressed() {
+
+        if(leftArm.getState() == ArmStates.GRABBING) {
+            leftArm.release(world);
+        }
+
+        leftHandFollowingMouse = true;
+    }
+
+    public void onLeftClickReleased() {
+
+        leftHandFollowingMouse = false;
+
+        if(leftArm.getCurrentGripPoint() != null) {
+            leftArm.grab(world);
+        }
+    }
+
+    public void onRightClickPressed() {
+
+        if(rightArm.getState() == ArmStates.GRABBING) {
+            rightArm.release(world);
+        }
+
+        rightHandFollowingMouse = true;
+    }
+
+    public void onRightClickReleased() {
+
+        rightHandFollowingMouse = false;
+
+        if(rightArm.getCurrentGripPoint() != null) {
+            rightArm.grab(world);
+        }
+    }
+
     public void update(Vector2 mousePosition, World world) {
 
-        if(!leftArm.isGrabbing() && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if(leftHandFollowingMouse) {
             leftArm.update(mousePosition);
         }
 
-        if(!rightArm.isGrabbing() && Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+        if(rightHandFollowingMouse) {
             rightArm.update(mousePosition);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            leftArm.grab(world);
-            rightArm.grab(world);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            leftArm.release(world);
-
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            rightArm.release(world);
-
         }
     }
 }

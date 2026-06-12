@@ -28,7 +28,7 @@ public class FullArm {
 
     private GripPoint currentGripPoint;
     private RevoluteJoint gripJoint;
-    private boolean grabbing;
+    private ArmStates state = ArmStates.FREE;
 
     public FullArm(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float weight, float friction, float restitution, short groupIndex, Sides side) {
 
@@ -99,25 +99,25 @@ public class FullArm {
             return;
         }
 
-        if(grabbing) {
+        if(state == ArmStates.GRABBING) {
             return;
         }
 
         gripJoint = JointFactory.createRevoluteJoint(hand, currentGripPoint.getBody(), false, new Vector2(0, 0), new Vector2(0, 0), world);
 
-        grabbing = true;
+        state = ArmStates.GRABBING;
     }
 
     public void release(World world) {
 
-        if(!grabbing) {
+        if(state == ArmStates.FREE) {
             return;
         }
 
         world.destroyJoint(gripJoint);
 
         gripJoint = null;
-        grabbing = false;
+        state = ArmStates.FREE;
     }
 
     public void update(Vector2 mousePosition) {
@@ -132,8 +132,12 @@ public class FullArm {
         return ShoulderAnchor;
     }
 
-    public boolean isGrabbing() {
-        return grabbing;
+    public ArmStates getState() {
+        return state;
+    }
+
+    public GripPoint getCurrentGripPoint() {
+        return currentGripPoint;
     }
 
     public void setCurrentGripPoint(GripPoint gripPoint) {

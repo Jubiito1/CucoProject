@@ -2,8 +2,10 @@ package com.TfPSR.CucoProject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -36,12 +38,25 @@ public class GameScreen extends ScreenAdapter {
         world = new World(GRAVEDAD, true);
         world.setContactListener(new GameContactListener());
 
-        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, false, (short) 0);
         player = new Character( new Vector2(2f, 4f), new Vector2(0.6f, 1.80f), 80f, world);
+
+        Gdx.input.setInputProcessor(
+            new GameInputProcessor(player)
+        );
+
+        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, false, (short) 0);
+
         gripPoint1 = new GripPoint(new Vector2(4, 2f), world);
         gripPoint2 = new GripPoint(new Vector2(3, 3f), world);
         gripPoint3 = new GripPoint(new Vector2(4, 4f), world);
         gripPoint4 = new GripPoint(new Vector2(3, 5f), world);
+
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        Cursor invisibleCursor = Gdx.graphics.newCursor(pixmap, 0, 0);
+
+        Gdx.graphics.setCursor(invisibleCursor);
+
+        pixmap.dispose();
     }
 
     public Vector2 findMousePosition() {
