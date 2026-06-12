@@ -1,7 +1,6 @@
 package com.TfPSR.CucoProject;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,10 +21,10 @@ public class GameScreen extends ScreenAdapter {
     private final Box2DDebugRenderer debugRenderer;
     private final Body groundBody;
     private final Character player;
-    private final GrabPoint grabPoint1;
-    private final GrabPoint grabPoint2;
-    private final GrabPoint grabPoint3;
-    private final GrabPoint grabPoint4;
+    private final GripPoint gripPoint1;
+    private final GripPoint gripPoint2;
+    private final GripPoint gripPoint3;
+    private final GripPoint gripPoint4;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -39,10 +38,10 @@ public class GameScreen extends ScreenAdapter {
 
         groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, false, (short) 0);
         player = new Character( new Vector2(2f, 4f), new Vector2(0.6f, 1.80f), 80f, world);
-        grabPoint1 = new GrabPoint(new Vector2(4, 2f), world);
-        grabPoint2 = new GrabPoint(new Vector2(3, 3f), world);
-        grabPoint3 = new GrabPoint(new Vector2(4, 4f), world);
-        grabPoint4 = new GrabPoint(new Vector2(3, 5f), world);
+        gripPoint1 = new GripPoint(new Vector2(4, 2f), world);
+        gripPoint2 = new GripPoint(new Vector2(3, 3f), world);
+        gripPoint3 = new GripPoint(new Vector2(4, 4f), world);
+        gripPoint4 = new GripPoint(new Vector2(3, 5f), world);
     }
 
     public Vector2 findMousePosition() {

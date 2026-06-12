@@ -26,8 +26,8 @@ public class FullArm {
     private final float derivativeGain = 40f;
     private static final float MAX_FORCE = 1000f;
 
-    private GrabPoint currentGrabPoint;
-    private RevoluteJoint grabJoint;
+    private GripPoint currentGripPoint;
+    private RevoluteJoint gripJoint;
     private boolean grabbing;
 
     public FullArm(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float weight, float friction, float restitution, short groupIndex, Sides side) {
@@ -95,7 +95,7 @@ public class FullArm {
 
     public void grab(World world) {
 
-        if(currentGrabPoint == null) {
+        if(currentGripPoint == null) {
             return;
         }
 
@@ -103,7 +103,7 @@ public class FullArm {
             return;
         }
 
-        grabJoint = JointFactory.createRevoluteJoint(hand, currentGrabPoint.getBody(), false, new Vector2(0, 0), new Vector2(0, 0), world);
+        gripJoint = JointFactory.createRevoluteJoint(hand, currentGripPoint.getBody(), false, new Vector2(0, 0), new Vector2(0, 0), world);
 
         grabbing = true;
     }
@@ -114,9 +114,9 @@ public class FullArm {
             return;
         }
 
-        world.destroyJoint(grabJoint);
+        world.destroyJoint(gripJoint);
 
-        grabJoint = null;
+        gripJoint = null;
         grabbing = false;
     }
 
@@ -136,8 +136,8 @@ public class FullArm {
         return grabbing;
     }
 
-    public void setCurrentGrabPoint(GrabPoint grabPoint) {
-        this.currentGrabPoint = grabPoint;
+    public void setCurrentGripPoint(GripPoint gripPoint) {
+        this.currentGripPoint = gripPoint;
     }
 
 }

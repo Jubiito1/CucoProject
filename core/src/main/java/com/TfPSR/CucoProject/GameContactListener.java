@@ -8,20 +8,20 @@ public class GameContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         FullArm arm = getArm(contact);
-        GrabPoint grabPoint = getGrabPoint(contact);
+        GripPoint gripPoint = getGripPoint(contact);
 
-        if(arm != null && grabPoint != null) {
-            arm.setCurrentGrabPoint(grabPoint);
+        if(arm != null && gripPoint != null) {
+            arm.setCurrentGripPoint(gripPoint);
         }
     }
 
     @Override
     public void endContact(Contact contact) {
         FullArm arm = getArm(contact);
-        GrabPoint grabPoint = getGrabPoint(contact);
+        GripPoint gripPoint = getGripPoint(contact);
 
-        if(arm != null && grabPoint != null) {
-            arm.setCurrentGrabPoint(null);
+        if(arm != null && gripPoint != null) {
+            arm.setCurrentGripPoint(null);
         }
 
     }
@@ -41,15 +41,15 @@ public class GameContactListener implements ContactListener {
         return null;
     }
 
-    private GrabPoint getGrabPoint(Contact contact) {
+    private GripPoint getGripPoint(Contact contact) {
         Object dataA = contact.getFixtureA().getBody().getUserData();
         Object dataB = contact.getFixtureB().getBody().getUserData();
 
-        if(dataA instanceof GrabPoint) {
-            return (GrabPoint) dataA;
+        if(dataA instanceof GripPoint) {
+            return (GripPoint) dataA;
         }
-        if(dataB instanceof GrabPoint) {
-            return (GrabPoint) dataB;
+        if(dataB instanceof GripPoint) {
+            return (GripPoint) dataB;
         }
 
         return null;
