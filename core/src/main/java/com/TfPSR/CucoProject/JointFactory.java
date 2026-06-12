@@ -16,7 +16,6 @@ public class JointFactory {
         jointDef.collideConnected = collideConnected;
         jointDef.localAnchorA.set(anchorA);
         jointDef.localAnchorB.set(anchorB);
-        world.createJoint(jointDef);
 
         return (RevoluteJoint) world.createJoint(jointDef);
     }

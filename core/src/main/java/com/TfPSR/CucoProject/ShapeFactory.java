@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class ShapeFactory {
     private ShapeFactory() {}
 
-    public static Body createRectangle(final Vector2 position, final Vector2 size, float angle, final BodyDef.BodyType type, final World world, float density, float friction, float restitution, short groupIndex) {
+    public static Body createRectangle(final Vector2 position, final Vector2 size, float angle, final BodyDef.BodyType type, final World world, float density, float friction, float restitution, boolean isSensor, short groupIndex) {
 
         //define body
         final BodyDef bodyDef = new BodyDef();
@@ -23,11 +23,38 @@ public class ShapeFactory {
         fixtureDef.density = density;
         fixtureDef.friction = friction;
         fixtureDef.restitution = restitution;
+        fixtureDef.isSensor = isSensor;
         fixtureDef.filter.groupIndex = groupIndex;
 
         body.createFixture(fixtureDef);
         shape.dispose();
 
         return body;
+    }
+
+    public static Body createCircle(Vector2 position,float radius,BodyDef.BodyType type, World world, float density, float friction, float restitution, boolean isSensor, short groupIndex) {
+
+        //define body
+        final BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(position);
+        bodyDef.type = type;
+        final Body body = world.createBody(bodyDef);
+
+        //define fixture
+        final CircleShape shape = new CircleShape();
+        shape.setRadius(radius);
+        final FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = density;
+        fixtureDef.friction = friction;
+        fixtureDef.restitution = restitution;
+        fixtureDef.isSensor = isSensor;
+        fixtureDef.filter.groupIndex = groupIndex;
+
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        return body;
+
     }
 }

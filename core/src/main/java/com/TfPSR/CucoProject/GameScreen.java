@@ -22,6 +22,10 @@ public class GameScreen extends ScreenAdapter {
     private final Box2DDebugRenderer debugRenderer;
     private final Body groundBody;
     private final Character player;
+    private final GrabPoint grabPoint1;
+    private final GrabPoint grabPoint2;
+    private final GrabPoint grabPoint3;
+    private final GrabPoint grabPoint4;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -31,8 +35,14 @@ public class GameScreen extends ScreenAdapter {
         this.debugRenderer = new Box2DDebugRenderer();
 
         world = new World(GRAVEDAD, true);
-        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, (short) 0);
+        world.setContactListener(new GameContactListener());
+
+        groundBody = ShapeFactory.createRectangle(new Vector2(0f, 0f), new Vector2(10f, 1f), 0, BodyDef.BodyType.StaticBody, world, 0.4f, 1f, 0, false, (short) 0);
         player = new Character( new Vector2(2f, 4f), new Vector2(0.6f, 1.80f), 80f, world);
+        grabPoint1 = new GrabPoint(new Vector2(4, 2f), world);
+        grabPoint2 = new GrabPoint(new Vector2(3, 3f), world);
+        grabPoint3 = new GrabPoint(new Vector2(4, 4f), world);
+        grabPoint4 = new GrabPoint(new Vector2(3, 5f), world);
     }
 
     public Vector2 findMousePosition() {
@@ -61,10 +71,10 @@ public class GameScreen extends ScreenAdapter {
 
     private void update(float delta) {
         camera.position.set(0, 2, 0);
-        camera.zoom = 0.7f;
+        camera.zoom = 1f;
         camera.update();
 
-        player.update(findMousePosition());
+        player.update(findMousePosition(), world);
 
         world.step(delta, 10, 4);
     }

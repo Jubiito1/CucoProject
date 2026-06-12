@@ -19,12 +19,16 @@ public class FullArm {
     private final Body forearm;
     private final Body arm;
     private final Vector2 ShoulderAnchor;
-    private Vector2 distance;
-    private Vector2 velocity;
-    private Vector2 force;
-    private final float proportionalGain = 50f;
-    private final float derivativeGain = 20f;
-    private static final float MAX_FORCE = 500f;
+    private final Vector2 distance = new Vector2();
+    private final Vector2 velocity = new Vector2();
+    private final Vector2 force = new Vector2();
+    private final float proportionalGain = 100f;
+    private final float derivativeGain = 40f;
+    private static final float MAX_FORCE = 1000f;
+
+    private GrabPoint currentGrabPoint;
+    private RevoluteJoint grabJoint;
+    private boolean grabbing;
 
     public FullArm(Vector2 position, Vector2 size, float angle, BodyDef.BodyType type, World world, float weight, float friction, float restitution, short groupIndex, Sides side) {
 
@@ -48,9 +52,13 @@ public class FullArm {
         float forearmDensity = forearmMass / forearmArea;
         float handDensity = handMass / handArea;
 
-        arm = ShapeFactory.createRectangle(armPosition, armSize, angle, type, world, armDensity, friction, restitution, groupIndex);
-        forearm = ShapeFactory.createRectangle(forearmPosition, forearmSize, angle, type, world, forearmDensity, friction, restitution, groupIndex);
-        hand = ShapeFactory.createRectangle(handPosition, handSize, angle, type, world, handDensity, friction, restitution, groupIndex);
+        arm = ShapeFactory.createRectangle(armPosition, armSize, angle, type, world, armDensity, friction, restitution, false, groupIndex);
+        forearm = ShapeFactory.createRectangle(forearmPosition, forearmSize, angle, type, world, forearmDensity, friction, restitution, false, groupIndex);
+        hand = ShapeFactory.createRectangle(handPosition, handSize, angle, type, world, handDensity, friction, restitution, false, groupIndex);
+
+        arm.setUserData(null);
+        forearm.setUserData(null);
+        hand.setUserData(this);
 
         Vector2 armElbowAnchor = new Vector2(0, - (armSize.y / 2));
         Vector2 forearmElbowAnchor = new Vector2(0, (forearmSize.y / 2));
@@ -72,18 +80,44 @@ public class FullArm {
 
     public void movePlayerToMouse(Vector2 mousePosition) {
 
-        distance = mousePosition.cpy().sub(hand.getPosition());
+        distance.set(mousePosition).sub(hand.getPosition());
 
-        velocity = hand.getLinearVelocity();
+        velocity.set(hand.getLinearVelocity());
 
-        force = distance.scl(proportionalGain)
-            .sub(velocity.scl(derivativeGain));
+        force.set(distance).scl(proportionalGain).sub(velocity.x * derivativeGain, velocity.y * derivativeGain);
 
         if(force.len() > MAX_FORCE) {
             force.setLength(MAX_FORCE);
         }
 
         hand.applyForceToCenter(force, true);
+    }
+
+    public void grab(World world) {
+
+        if(currentGrabPoint == null) {
+            return;
+        }
+
+        if(grabbing) {
+            return;
+        }
+
+        grabJoint = JointFactory.createRevoluteJoint(hand, currentGrabPoint.getBody(), false, new Vector2(0, 0), new Vector2(0, 0), world);
+
+        grabbing = true;
+    }
+
+    public void release(World world) {
+
+        if(!grabbing) {
+            return;
+        }
+
+        world.destroyJoint(grabJoint);
+
+        grabJoint = null;
+        grabbing = false;
     }
 
     public void update(Vector2 mousePosition) {
@@ -96,6 +130,14 @@ public class FullArm {
 
     public Vector2 getShoulderAnchor() {
         return ShoulderAnchor;
+    }
+
+    public boolean isGrabbing() {
+        return grabbing;
+    }
+
+    public void setCurrentGrabPoint(GrabPoint grabPoint) {
+        this.currentGrabPoint = grabPoint;
     }
 
 }
