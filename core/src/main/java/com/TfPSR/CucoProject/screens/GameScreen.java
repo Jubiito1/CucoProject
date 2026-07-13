@@ -1,7 +1,9 @@
-package com.TfPSR.CucoProject;
+package com.TfPSR.CucoProject.screens;
 
+import com.TfPSR.CucoProject.Main;
+import com.TfPSR.CucoProject.game.entities.Character;
+import com.TfPSR.CucoProject.game.physics.ShapeFactory;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;

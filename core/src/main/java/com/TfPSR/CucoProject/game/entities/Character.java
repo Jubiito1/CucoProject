@@ -1,5 +1,8 @@
-package com.TfPSR.CucoProject;
+package com.TfPSR.CucoProject.game.entities;
 
+import com.TfPSR.CucoProject.game.physics.JointFactory;
+import com.TfPSR.CucoProject.game.physics.ShapeFactory;
+import com.TfPSR.CucoProject.Sides;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
