@@ -1,4 +1,4 @@
-package com.TfPSR.CucoProject;
+package com.TfPSR.ToTheTop;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
