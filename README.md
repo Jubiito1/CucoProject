@@ -28,19 +28,23 @@ referencias e inspiración a **Getting Over It*, *Peak* y *Mount Your Friends**.
 - Herramientas adicionales: Box2D(para físicas) y Tiled(Diseño de mapas)
 - Plataforma de desarrollo objetivo:Escritorio(Windows y Linux)
 - IDE utilizado: InteliJ IDEA Community Edition
+
 ---
 
 ## Enlace a la wiki del proyecto(Propuesta Detallada)
+
+[Ver la propuesta completa del proyecto aquí](https://github.com/Jubiito1/CucoProject/wiki/Propuesta-del-proyecto-‐-To-The-Top)
 
 ---
 
 ## Cómo compilar y ejecutar
 ### Windows y Linux
 1. *Clonar el repositorio*
-   bash
+
+     ``` bash 
    git clone https://github.com/Jubiito1/ToTheTop
    cd ToTheTop
-      
+   ```    
    
 2. *Importar el proyecto en un IDE compatible con gradle (recomendado InteliJ)*
 - Seleccionar como Gradle project
@@ -51,9 +55,10 @@ referencias e inspiración a **Getting Over It*, *Peak* y *Mount Your Friends**.
 - Desde la consola (Linux y Windows con gradlew)
 
 
-   bash
+``` bash   
    #Linux 
    ./gradlew lwjgl3:run
   
   # Windows (CMD o PowerShell)
   gradlew.bat lwjgl3:run
+```
